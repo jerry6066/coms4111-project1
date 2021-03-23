@@ -1,0 +1,74 @@
+<div>
+    {% for key in data['basicInfo']%}
+        <label id={{key}}>{{key}} : {{data['basicInfo'][key]}}</label><br>
+    {% endfor %}
+</div>
+<hr>
+<h3>Comment</h3>
+<div>
+    {% for msg in data['messages']%}
+        <hr style="border-top: 1px dashed #ccc">
+        {% for key in msg%}
+            <label>{{key}} : {{msg[key]}}</label><br>
+        {% endfor %}
+        <hr style="border-top: 1px dashed #ccc">
+    {% endfor %}
+</div>
+<hr>
+<h3>Rating</h3>
+<div>
+    {% for msg in data['rates']%}
+        <hr style="border-top: 1px dashed #ccc">
+        {% for key in msg%}
+            <label>{{key}} : {{msg[key]}}</label><br>
+        {% endfor %}
+        <hr style="border-top: 1px dashed #ccc">
+    {% endfor %}
+</div>
+<hr>
+<div>
+    <label>Your User ID:</label>
+    <input id='uid'>
+</div>
+<hr>
+<div>
+    <input id='comment_input'>
+    <button id='comment_button'>Leave Comments</button>
+</div>
+<hr>
+<div>
+    <input type='number' id='num' value='1'>
+    <button id='addToCart_button'>Add To My Cart</button>
+</div>
+<script>
+    let comment_button = document.getElementById('comment_button')
+    let cid = document.getElementById('cid').textContent.split(':')[1].slice(1);
+    comment_button.addEventListener('click',function() {
+        let uid = document.getElementById('uid').value;
+        let comment = document.getElementById('comment_input').value;
+        if (uid.length===0){
+            alert('Please tell me who you are.')
+        } else if(comment.length===0){
+            alert('Please type some comments')
+        } else {
+            alert(cid+" "+uid+" "+comment)
+            window.location.href=window.location.origin+'/send?method=comment&cid='+cid+'&uid='+uid+'&content='+comment
+        }
+    })
+    let addToCart_button = document.getElementById('addToCart_button');
+    addToCart_button.addEventListener('click',function(){
+        let uid = document.getElementById('uid').value;
+        let num = parseInt(document.getElementById('num').value);
+        let stock = parseInt(document.getElementById('stock').textContent.split(':')[1].slice(1))
+        if (uid.length===0){
+            alert('Please tell me who you are.')
+        } else if(num<=0 || num > stock) {
+            alert('Invalid number')
+        } else {
+            window.location.href=window.location.origin+'/send?method=cart&cid='+cid+'&uid='+uid+'&num='+num
+        
+        }
+    })
+    
+
+</script>

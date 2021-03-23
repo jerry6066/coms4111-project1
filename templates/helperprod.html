@@ -1,0 +1,22 @@
+
+<div id='root'>
+    {%for user in data%}
+    <div id={{user['cid']}}>
+    <hr style="border-top: 1px dashed #ccc">
+    
+    {% for key in user.keys()%}
+        <label>{{key}} : {{user[key]}}</label><br>
+    {% endfor %}
+    <hr style="border-top: 1px dashed #ccc">
+    </div>  
+    {%endfor%}
+</div>
+<script>
+    let root = document.getElementById('root')
+    root.addEventListener('click',function(event){
+        let id = event.target.id || event.target.parentElement.id;
+        if (id!=='root'){
+            window.location.href=window.location.origin+'/cid?cid='+id   
+        }
+    })
+</script>

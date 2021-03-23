@@ -1,0 +1,95 @@
+<div>
+    <label>Your User ID:</label>
+    <input id='uid' value={{data['basicInfo']['uid']}}>
+    <button id='uid_button'>Change</button>
+</div>
+<hr>
+<div>
+    <h1>My Info</h1>
+    {% for key in data['basicInfo']%}
+        <label id={{key}}>{{key}} : {{data['basicInfo'][key]}}</label><br>
+    {% endfor %}
+    <input id='username_input'>
+    <button id="username_button">Change Username</button>
+    <br>
+    <input id='address_input'>
+    <button id="address_button">Change Address</button>
+</div>
+<hr>
+<div>
+    <h1>My Cart</h1>
+    {% for item in data['cart']%}
+        <hr style="border-top: 1px dashed #ccc">
+        {% for key in item%}
+            <label>{{key}} : {{item[key]}}</label><br>
+        {% endfor %}
+        <hr style="border-top: 1px dashed #ccc">
+    {% endfor %}
+    <button id="checkout_button">Checkout</button>
+</div>
+<hr>
+<div id='purchased'>
+    <h1>Purchased</h1>
+    {% for item in data['purchased']%}
+        <hr style="border-top: 1px dashed #ccc">
+        {% for key in item%}
+            {% if key == 'items'%}
+            <div id={{item['order_id']}}>
+                {%for value in item[key]%}
+                    <label class={{value['cid']}}>{{value}}</label><br>
+                {%endfor%}
+            </div>
+            {%else%}
+                <label>{{key}} : {{item[key]}}</label><br>
+            {%endif%}
+        {% endfor %}
+        <hr style="border-top: 1px dashed #ccc">
+    {% endfor %}
+</div>
+<script>
+    let uid_button = document.getElementById('uid_button');
+    uid_button.addEventListener('click',function(){
+        let uid = document.getElementById('uid').value;
+        if (uid.length){
+            window.location.href=window.location.origin+'/user?uid='+uid   
+        }  
+    })
+    let username_button = document.getElementById('username_button');
+    username_button.addEventListener('click',function(){
+        let uid = document.getElementById('uid').value;
+        let username = document.getElementById('username_input').value;
+        if (username.length&&uid.length){
+            window.location.href=window.location.origin+'/send?method=username&uid='+uid+'&username='+username
+        }  
+    })
+
+    let address_button = document.getElementById('address_button');
+    address_button.addEventListener('click',function(){
+        let uid = document.getElementById('uid').value;
+        let address = document.getElementById('address_input').value;
+        if (address.length&&uid.length){
+            window.location.href=window.location.origin+'/send?method=address&uid='+uid+'&address='+address
+        }  
+    })
+
+    let checkout_button = document.getElementById('checkout_button');
+    checkout_button.addEventListener('click',function(){
+        let uid = document.getElementById('uid').value;
+        if (uid.length){
+            window.location.href=window.location.origin+'/send?method=checkout&uid='+uid
+        }  
+    })
+
+    let purchased_div = document.getElementById('purchased')
+    purchased_div.addEventListener('click',function(event){
+        if (event.target.classList.length>0){
+            let cid = event.target.classList[0]
+            let oid = event.target.parentElement.id;
+            let uid = document.getElementById('uid').value;
+            let rate = prompt("What's your rating for this product?", "5") || "5";
+            let content = prompt("How do you think about this product?", "Good") || "Good";
+            window.location.href=window.location.origin+'/send?method=rate&uid='+uid+'&oid='+oid+'&cid='+cid+'&rate='+rate+'&content='+content
+        }
+    })
+
+</script>

@@ -1,0 +1,78 @@
+
+<h1>{{data['title']}}</h1>
+<hr/>
+<div>
+    <input id="keyword_input" value={{data['key']}}>
+
+    <select id="category_input">
+        {% for item in data['categories']%}
+        {% if item == data['cate']%}
+        
+        <option value={{item}} selected>{{item}}</option>
+        {% else %}
+        <!-- <script>console.log({{item}})</script> -->
+        <option value={{item}}>{{item}}</option>
+        {% endif%}
+        {% endfor %}
+    </select>
+    <button id="search_button">Search</button>
+</div>
+<hr/>
+<div id="product">
+    {% for item in data['products']%}
+        <div id={{item['cid']}}>
+            <label>Name:{{item['name']}}</label>
+            <label>Stock:{{item['stock']}}</label>
+            <label>Price:{{item['cost']}}</label>
+            <label>Category:{{item['category']}}</label>
+            <hr style="border-top: 1px dashed;">
+        </div>  
+    {% endfor %}
+</div>
+<button id='prev_button'>Prev</button>
+<label id='page'>{{data['page']}}</label>
+<button id='next_button'>Next</button>
+<script>
+    let search_button = document.getElementById('search_button');
+    let page = parseInt(document.getElementById('page').textContent)
+    search_button.addEventListener('click', function(){
+        let keyword = document.getElementById('keyword_input').value;
+        let category = document.getElementById('category_input').value;
+        refresh(keyword,category,1)
+
+    })
+    let product_div = document.getElementById('product');
+    product_div.addEventListener('click', function(event){
+        let cid = event.target.id || event.target.parentElement.id;
+        window.location.href=window.location.origin+'/cid?cid='+cid
+    })
+    let prev_button = document.getElementById('prev_button')
+    let next_button = document.getElementById('next_button')
+
+    function refresh(keyword,category,page){
+        let newUrl = window.location.origin+'/prod?'
+        let para = []
+            if (keyword.length > 0){
+                para.push('key='+keyword)
+            }
+            if (category!=='All'){
+                para.push('cate='+category)
+            }
+            para.push('page='+page)
+            window.location.href=newUrl+para.join('&');
+    }
+
+    prev_button.addEventListener('click', function(){
+        if (page==1){alert('This is first page.')}
+        else{
+            let keyword = document.getElementById('keyword_input').value;
+            let category = document.getElementById('category_input').value;
+            refresh(keyword,category,page-1)
+        }
+    })
+    next_button.addEventListener('click', function(){
+            let keyword = document.getElementById('keyword_input').value;
+            let category = document.getElementById('category_input').value;
+            refresh(keyword,category,page+1)
+    })
+</script>
